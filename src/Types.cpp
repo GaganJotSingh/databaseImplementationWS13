@@ -164,7 +164,10 @@ Timestamp Timestamp::castString(const char* str,uint32_t strLen)
    if ((strLen==4)&&(strncmp(str,"NULL",4)==0))
       return null();
 
-   auto iter=str,limit=str+strLen;
+   const char* myStr = "2013-05-29 21:19:48.45";
+   uint32_t myStrLen = strlen(myStr);
+
+   auto iter=myStr,limit=myStr+myStrLen;
 
    // Trim WS
    while ((iter!=limit)&&((*iter)==' ')) ++iter;
