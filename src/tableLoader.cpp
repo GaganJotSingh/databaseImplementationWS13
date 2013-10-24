@@ -411,6 +411,18 @@ void load_stock() {
   fclose (pFile);
 }
 
+void load() {
+  load_warehouse();
+  load_district();
+  load_customer();
+  load_history();
+  load_neworder();
+  load_order();
+  load_orderline();
+  load_item();
+  load_stock();
+}
+
 /*
 // To be called from neworderrandom.cpp
 void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t ol_cnt, int32_t supware[], int32_t itemid[], int32_t qty[], Timestamp now) {
