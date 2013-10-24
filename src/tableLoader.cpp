@@ -405,3 +405,7 @@ void load_stock() {
   fclose (pFile);
 }
 
+// To be called from neworderrandom.cpp
+void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t ol_cnt, int32_t supware[], int32_t itemid[], int32_t qty[], Timestamp now) {
+   Numeric<4,4> w_tax_1 = t_warehouse[map_warehouse[(Integer)w_id]].w_tax;             // For "select w_tax from warehouse w where w.w_id=w_id;"
+}
