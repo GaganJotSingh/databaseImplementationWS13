@@ -154,7 +154,10 @@ void load_customer() {
 	t_customer.push_back(cust);
 	
 	map_customer.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(cust.c_w_id, cust.c_d_id, cust.c_id), counter));
-	customer_wdl.insert(std::pair<tuple<Integer, Integer, Varchar<16>, Varchar<16>>, uint64_t>(std::tuple<Integer, Integer, Varchar<16>, Varchar<16>>(cust.c_w_id, cust.c_d_id, cust.c_last, cust.c_first), counter));
+	
+	customer_wdl.insert(std::pair<uint64_t, uint64_t>(hashKey<Integer, Integer, Varchar<16>, Varchar<16>>(cust.c_w_id, cust.c_d_id, cust.c_last, cust.c_first), counter));
+	
+//	customer_wdl.insert(std::pair<tuple<Integer, Integer, Varchar<16>, Varchar<16>>, uint64_t>(std::tuple<Integer, Integer, Varchar<16>, Varchar<16>>(cust.c_w_id, cust.c_d_id, cust.c_last, cust.c_first), counter));
 	counter += 1;
   }
   
@@ -261,7 +264,10 @@ void load_order() {
 	t_order.push_back(odr);
 	
 	map_order.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id,odr.o_id), counter));
-	order_wdc.insert(std::pair<tuple<Integer, Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id, odr.o_c_id, odr.o_id), counter));
+	
+	order_wdc.insert(std::pair<uint64_t, uint64_t>(hashKey<Integer, Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id, odr.o_c_id, odr.o_id), counter));
+	
+//	order_wdc.insert(std::pair<tuple<Integer, Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id, odr.o_c_id, odr.o_id), counter));
 
 	counter += 1;
   }
@@ -405,6 +411,7 @@ void load_stock() {
   fclose (pFile);
 }
 
+/*
 // To be called from neworderrandom.cpp
 void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t ol_cnt, int32_t supware[], int32_t itemid[], int32_t qty[], Timestamp now) {
 
@@ -418,3 +425,4 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t ol_cnt, int32_t 
 
 
 }
+*/
