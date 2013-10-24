@@ -41,7 +41,7 @@ void load_warehouse() {
 	wh.w_ytd = Numeric<12,2>::castString(w_ytd, strlen(w_ytd));
 	t_warehouse.push_back(wh);
 	
-	map_warehouse.insert(std::pair<Integer, uint64_t>(wh.w_id, (uint64_t)&t_warehouse[counter]));
+	map_warehouse.insert(std::pair<Integer, uint64_t>(wh.w_id, counter));
 	counter += 1;
   }
   
@@ -87,7 +87,7 @@ void load_district() {
     dt.d_next_o_id = Integer::castString(d_next_o_id, strlen(d_next_o_id));
 	t_district.push_back(dt);
 	
-	map_district.insert(std::pair<tuple<Integer, Integer>, uint64_t>(std::tuple<Integer, Integer>(dt.d_w_id, dt.d_id), (uint64_t)&t_district[counter]));
+	map_district.insert(std::pair<tuple<Integer, Integer>, uint64_t>(std::tuple<Integer, Integer>(dt.d_w_id, dt.d_id), counter));
 	counter += 1;
   }
   
@@ -153,7 +153,7 @@ void load_customer() {
     cust.c_data = Varchar<500>::castString(c_data, strlen(c_data));
 	t_customer.push_back(cust);
 	
-	map_customer.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(cust.c_w_id, cust.c_d_id, cust.c_id), (uint64_t)&t_customer[counter]));
+	map_customer.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(cust.c_w_id, cust.c_d_id, cust.c_id), counter));
 	counter += 1;
   }
   
@@ -174,7 +174,6 @@ void load_history() {
   char buff[1024];
   struct history hist;
   FILE *pFile = fopen("tpcc_history.tbl", "r");
-//  uint64_t counter = 0;
   
   while(fgets(buff, 1024, pFile) != NULL) {
     std::cout<<"line = "<<buff<<endl;
@@ -192,7 +191,6 @@ void load_history() {
     hist.h_amount = Numeric<6,2>::castString(h_amount, strlen(h_amount));
     hist.h_data = Varchar<24>::castString(h_data, strlen(h_data));
 	t_history.push_back(hist);
-//	counter += 1;
   }
   
   fclose (pFile);
@@ -221,7 +219,7 @@ void load_neworder() {
 	no.no_w_id = Integer::castString(no_w_id, strlen(no_w_id));
 	t_neworder.push_back(no);
 	
-	map_neworder.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(no.no_w_id, no.no_d_id, no.no_o_id), (uint64_t)&t_neworder[counter]));
+	map_neworder.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(no.no_w_id, no.no_d_id, no.no_o_id), counter));
 	counter += 1;
   }
   
@@ -261,7 +259,7 @@ void load_order() {
     odr.o_all_local = Numeric<1,0>::castString(o_all_local, strlen(o_all_local));
 	t_order.push_back(odr);
 	
-	map_order.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id,odr.o_id), (uint64_t)&t_order[counter]));
+	map_order.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id,odr.o_id), counter));
 	counter += 1;
   }
   
@@ -305,7 +303,7 @@ void load_orderline() {
     odr_l.ol_dist_info = Char<24>::castString(ol_dist_info, strlen(ol_dist_info));
 	t_orderline.push_back(odr_l);
 	
-	map_orderline.insert(std::pair<tuple<Integer, Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer, Integer>(odr_l.ol_w_id, odr_l.ol_d_id, odr_l.ol_o_id, odr_l.ol_number), (uint64_t)&t_orderline[counter]));
+	map_orderline.insert(std::pair<tuple<Integer, Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer, Integer>(odr_l.ol_w_id, odr_l.ol_d_id, odr_l.ol_o_id, odr_l.ol_number), counter));
 	counter += 1;
   }
   
@@ -339,7 +337,7 @@ void load_item() {
     itm.i_data = Varchar<50>::castString(i_data, strlen(i_data));
 	t_item.push_back(itm);
 	
-	map_item.insert(std::pair<Integer, uint64_t>(itm.i_id, (uint64_t)&t_item[counter]));
+	map_item.insert(std::pair<Integer, uint64_t>(itm.i_id, counter));
 	counter += 1;
   }
   
@@ -397,7 +395,7 @@ void load_stock() {
     stk.s_data = Varchar<50>::castString(s_data, strlen(s_data));
 	t_stock.push_back(stk);
 	
-	map_stock.insert(std::pair<tuple<Integer, Integer>, uint64_t>(std::tuple<Integer, Integer>(stk.s_w_id, stk.s_i_id), (uint64_t)&t_stock[counter]));	
+	map_stock.insert(std::pair<tuple<Integer, Integer>, uint64_t>(std::tuple<Integer, Integer>(stk.s_w_id, stk.s_i_id), counter));	
 	counter += 1;
   }
   
