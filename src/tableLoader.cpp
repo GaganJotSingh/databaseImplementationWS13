@@ -544,17 +544,26 @@ std::cout<<"c_discount = "<<c_discount<<"\n";
       t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_order_cnt = s_order_cnt_currentValue + 1;
 	}
 	std::cout<<"new value of s_quantity = "<<t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_quantity<<endl;
+
+    //For "var numeric(6,2) ol_amount=qty[index]*i_price*(1.0+w_tax+d_tax)*(1.0-c_discount);"
+	Numeric<6,2> ol_amount = Numeric<6,2>(qty[index] * i_price.value * (1.0+w_tax.value+d_tax.value) * (1.0-c_discount.value));
 	
+	// For "insert into orderline values (o_id,d_id,w_id,index+1,itemid[index],supware[index],0,qty[index],ol_amount,s_dist);"
+	struct orderline odr_l;
+	odr_l.ol_o_id = o_id;
+	odr_l.ol_d_id = Integer(d_id);
+	odr_l.ol_w_id = Integer(w_id);
+	odr_l.ol_number = Integer(index+1);
+	odr_l.ol_i_id = Integer(itemid[index]);
+	odr_l.ol_supply_w_id = Integer(supware[index]);
+	odr_l.ol_delivery_d = Timestamp(0);
+    odr_l.ol_quantity = Numeric<2,0>(qty[index]);
+    odr_l.ol_amount = ol_amount;
+    odr_l.ol_dist_info = s_dist;
+	t_orderline.push_back(odr_l);	
+	map_orderline.insert(std::pair<tuple<Integer, Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer, Integer>(odr_l.ol_w_id, odr_l.ol_d_id, odr_l.ol_o_id, odr_l.ol_number), t_orderline.size() - 1));	
   }
-
-/*  
-   forsequence (index between 0 and items-1) {
-
-      var numeric(6,2) ol_amount=qty[index]*i_price*(1.0+w_tax+d_tax)*(1.0-c_discount);
-      insert into orderline values (o_id,d_id,w_id,index+1,itemid[index],supware[index],0,qty[index],ol_amount,s_dist);
-   }  
-*/
-
+  
 return;
 
 }
