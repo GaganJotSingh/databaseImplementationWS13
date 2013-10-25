@@ -59,7 +59,7 @@ int main() {
   start = time(NULL);
   std::cout<<"start = "<<start<<endl;
 
-  // Running neworderrandom 1 million times.
+  // Running neworderrandom() 1 million times.
   for(uint64_t counter=0; counter<300000; counter++) {
     now.value = time(NULL);
 	w_id = random();
@@ -67,7 +67,7 @@ int main() {
   }
   end = time(NULL);
   std::cout<<"end = "<<end<<endl;
-  std::cout<<"Total time taken = "<<(end - start)<<" ms"<<endl;
+  std::cout<<"Total time taken = "<<(end - start)<<" seconds"<<endl;
   
   return 0;
 }

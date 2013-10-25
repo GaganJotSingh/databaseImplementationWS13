@@ -481,7 +481,6 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 	 update stock set s_quantity=s_quantity+91-qty[index] where s_w_id=supware[index] and s_i_id=itemid[index];
 	}" */
 	Numeric<4,0> s_quantity_currentValue = t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity;
-
     if(s_quantity > Numeric<4,0>(qty[index])) {
       t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity = s_quantity_currentValue - Numeric<4,0>(qty[index]);
 	} else {
