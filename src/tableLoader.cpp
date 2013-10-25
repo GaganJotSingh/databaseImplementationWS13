@@ -1,7 +1,6 @@
 #include "Types.cpp"
 #include "schema.cpp"
 #include <iostream>
-#include <cstring>
 #include <cstdio>
 
 using namespace std;
@@ -24,11 +23,8 @@ void load_warehouse() {
   uint64_t counter = 0;
   
   while(fgets(buff, 1024, pFile) != NULL) {
-//    std::cout<<"line = "<<buff<<endl;
-	
+  
 	sscanf(buff, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%s", w_id, w_name, w_street_1, w_street_2, w_city, w_state, w_zip, w_tax, w_ytd);
-	
-//    std::cout<<w_id<<" "<<w_name<<" "<<w_street_1<<" "<<w_street_2<<" "<<w_city<<" "<<w_state<<" "<<w_zip<<" "<<w_tax<<" "<<w_ytd<<endl;
 	
 	wh.w_id = Integer::castString(w_id, strlen(w_id));
 	wh.w_name = Varchar<10>::castString(w_name, strlen(w_name));
@@ -68,11 +64,8 @@ void load_district() {
   uint64_t counter = 0;
   
   while(fgets(buff, 1024, pFile) != NULL) {
-//    std::cout<<"line = "<<buff<<endl;
 	
 	sscanf(buff, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%s", d_id, d_w_id, d_name, d_street_1, d_street_2, d_city, d_state, d_zip, d_tax, d_ytd, d_next_o_id);
-	
-//    std::cout<<d_id<<" "<<d_w_id<<" "<<d_name<<" "<<d_street_1<<" "<<d_street_2<<" "<<d_city<<" "<<d_state<<" "<<d_zip<<" "<<d_tax<<" "<<d_ytd<<" "<<d_next_o_id<<endl;
 	
 	dt.d_id = Integer::castString(d_id, strlen(d_id));
 	dt.d_w_id = Integer::castString(d_w_id, strlen(d_w_id));
@@ -124,11 +117,9 @@ void load_customer() {
   uint64_t counter = 0;
   
   while(fgets(buff, 1024, pFile) != NULL) {
-//    std::cout<<"line = "<<buff<<endl;
 	
 	sscanf(buff, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%s", c_id, c_d_id, c_w_id, c_first, c_middle, c_last, c_street_1, c_street_2, c_city, c_state, c_zip, c_phone, c_since, c_credit, c_credit_lim, c_discount, c_balance, c_ytd_paymenr, c_payment_cnt, c_delivery_cnt, c_data);
 	
-//    std::cout<<c_id<<" "<<c_d_id<<" "<<c_w_id<<" "<<c_first<<" "<<c_middle<<" "<<c_last<<" "<<c_street_1<<" "<<c_street_2<<" "<<c_city<<" "<<c_state<<" "<<c_zip<<" "<<c_phone<<" "<<c_since<<" "<<c_credit<<" "<<c_credit_lim<<" "<<c_discount<<" "<<c_balance<<" "<<c_ytd_paymenr<<" "<<c_payment_cnt<<" "<<c_delivery_cnt<<" "<<c_data<<endl;
 
 	cust.c_id = Integer::castString(c_id, strlen(c_id));
 	cust.c_d_id = Integer::castString(c_d_id, strlen(c_d_id));
@@ -157,7 +148,6 @@ void load_customer() {
 	
 	customer_wdl.insert(std::pair<uint64_t, uint64_t>(hashKey<Integer, Integer, Varchar<16>, Varchar<16>>(cust.c_w_id, cust.c_d_id, cust.c_last, cust.c_first), counter));
 	
-//	customer_wdl.insert(std::pair<tuple<Integer, Integer, Varchar<16>, Varchar<16>>, uint64_t>(std::tuple<Integer, Integer, Varchar<16>, Varchar<16>>(cust.c_w_id, cust.c_d_id, cust.c_last, cust.c_first), counter));
 	counter += 1;
   }
   
@@ -180,11 +170,8 @@ void load_history() {
   FILE *pFile = fopen("tpcc_history.tbl", "r");
   
   while(fgets(buff, 1024, pFile) != NULL) {
-//    std::cout<<"line = "<<buff<<endl;
 	
 	sscanf(buff, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%s", h_c_id, h_c_d_id, h_c_w_id, h_d_id, h_w_id, h_date, h_amount, h_data);
-
-//    std::cout<<h_c_id<<" "<<h_c_d_id<<" "<<h_c_w_id<<" "<<h_d_id<<" "<<h_w_id<<" "<<h_date<<" "<<h_amount<<" "<<h_data<<endl;
 	
 	hist.h_c_id = Integer::castString(h_c_id, strlen(h_c_id));
 	hist.h_c_d_id = Integer::castString(h_c_d_id, strlen(h_c_d_id));
@@ -212,11 +199,8 @@ void load_neworder() {
   uint64_t counter = 0;
 
   while(fgets(buff, 1024, pFile) != NULL) {
-//    std::cout<<"line = "<<buff<<endl;
 	
 	sscanf(buff, "%[^|]|%[^|]|%s", no_o_id, no_d_id, no_w_id);
-	
-//    std::cout<<no_o_id<<" "<<no_d_id<<" "<<no_w_id<<endl;
 	
 	no.no_o_id = Integer::castString(no_o_id, strlen(no_o_id));
 	no.no_d_id = Integer::castString(no_d_id, strlen(no_d_id));
@@ -247,11 +231,8 @@ void load_order() {
   uint64_t counter = 0;
   
   while(fgets(buff, 1024, pFile) != NULL) {
-//    std::cout<<"line = "<<buff<<endl;
 	
 	sscanf(buff, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%s", o_id, o_d_id, o_w_id, o_c_id, o_entry_d, o_carrier_id, o_ol_cnt, o_all_local);
-
-//    std::cout<<o_id<<" "<<o_d_id<<" "<<o_w_id<<" "<<o_c_id<<" "<<o_entry_d<<" "<<o_carrier_id<<" "<<o_ol_cnt<<" "<<o_all_local<<endl;
 	
 	odr.o_id = Integer::castString(o_id, strlen(o_id));
 	odr.o_d_id = Integer::castString(o_d_id, strlen(o_d_id));
@@ -266,8 +247,6 @@ void load_order() {
 	map_order.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id,odr.o_id), counter));
 	
 	order_wdc.insert(std::pair<uint64_t, uint64_t>(hashKey<Integer, Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id, odr.o_c_id, odr.o_id), counter));
-	
-//	order_wdc.insert(std::pair<tuple<Integer, Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id, odr.o_c_id, odr.o_id), counter));
 
 	counter += 1;
   }
@@ -294,11 +273,8 @@ void load_orderline() {
   uint64_t counter = 0;
 
   while(fgets(buff, 1024, pFile) != NULL) {
-//    std::cout<<"line = "<<buff<<endl;
 	
 	sscanf(buff, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%s", ol_o_id, ol_d_id, ol_w_id, ol_number, ol_i_id, ol_supply_w_id, ol_delivery_d, ol_quantity, ol_amount, ol_dist_info);
-
-//    std::cout<<ol_o_id<<" "<<ol_d_id<<" "<<ol_w_id<<" "<<ol_number<<" "<<ol_i_id<<" "<<ol_supply_w_id<<" "<<ol_delivery_d<<" "<<ol_quantity<<" "<<ol_amount<<" "<<ol_dist_info<<endl;
 	
 	odr_l.ol_o_id = Integer::castString(ol_o_id, strlen(ol_o_id));
 	odr_l.ol_d_id = Integer::castString(ol_d_id, strlen(ol_d_id));
@@ -333,11 +309,8 @@ void load_item() {
   uint64_t counter = 0;
 
   while(fgets(buff, 1024, pFile) != NULL) {
-//    std::cout<<"line = "<<buff<<endl;
 	
 	sscanf(buff, "%[^|]|%[^|]|%[^|]|%[^|]|%s", i_id, i_im_id, i_name, i_price, i_data);
-
-//    std::cout<<i_id<<" "<<i_im_id<<" "<<i_name<<" "<<i_price<<" "<<i_data<<endl;
 	
 	itm.i_id = Integer::castString(i_id, strlen(i_id));
 	itm.i_im_id = Integer::castString(i_im_id, strlen(i_im_id));
@@ -379,11 +352,8 @@ void load_stock() {
   uint64_t counter = 0;
 
   while(fgets(buff, 1024, pFile) != NULL) {
-//    std::cout<<"line = "<<buff<<endl;
 	
 	sscanf(buff, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%s", s_i_id, s_w_id, s_quantity, s_dist_01, s_dist_02, s_dist_03, s_dist_04, s_dist_05, s_dist_06, s_dist_07, s_dist_08, s_dist_09, s_dist_10, s_ytd, s_order_cnt, s_remote_cnt, s_data);
-	
-//    std::cout<<s_i_id<<" "<<s_w_id<<" "<<s_quantity<<" "<<s_dist_01<<" "<<s_dist_02<<" "<<s_dist_03<<" "<<s_dist_04<<" "<<s_dist_05<<" "<<s_dist_06<<" "<<s_dist_07<<" "<<s_dist_08<<" "<<s_dist_09<<" "<<s_dist_10<<" "<<s_ytd<<" "<<s_order_cnt<<" "<<s_remote_cnt<<" "<<s_data<<endl;
 	
 	stk.s_i_id = Integer::castString(s_i_id, strlen(s_i_id));
 	stk.s_w_id = Integer::castString(s_w_id, strlen(s_w_id));
@@ -426,26 +396,20 @@ void load() {
 
 // To be called from neworderrandom.cpp
 void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t supware[], int32_t itemid[], int32_t qty[], Timestamp datetime) {
-//std::cout<<"neworder function called...\n";
 
   // For "select w_tax from warehouse w where w.w_id=w_id;"
   Numeric<4,4> w_tax = t_warehouse[map_warehouse[(Integer)w_id]].w_tax;
-//std::cout<<"w_tax = "<<w_tax<<"\n";
 
   // For "select c_discount from customer c where c_w_id=w_id and c_d_id=d_id and c.c_id=c_id;"  
   Numeric<4,4> c_discount = t_customer[map_customer[std::tuple<Integer, Integer, Integer>((Integer)w_id, (Integer)d_id, (Integer)c_id)]].c_discount;
-//std::cout<<"c_discount = "<<c_discount<<"\n";
 
   // For "select d_next_o_id as o_id,d_tax from district d where d_w_id=w_id and d.d_id=d_id;"
   Integer d_next_o_id = t_district[map_district[std::tuple<Integer, Integer>((Integer)w_id, (Integer)d_id)]].d_next_o_id;
   Integer o_id = d_next_o_id;
   Numeric<4,4> d_tax = (Numeric<4,4>)d_next_o_id;
-//  std::cout<<"o_id="<<o_id<<" and d_tax= "<<d_tax<<endl;
   
   // For "update district set d_next_o_id=o_id+1 where d_w_id=w_id and district.d_id=d_id;"
-//  std::cout<<"old value od d_next_o_id = "<<t_district[map_district[std::tuple<Integer, Integer>((Integer)w_id, (Integer)d_id)]].d_next_o_id<<endl;
   t_district[map_district[std::tuple<Integer, Integer>((Integer)w_id, (Integer)d_id)]].d_next_o_id = o_id + 1;
-//  std::cout<<"new value od d_next_o_id = "<<t_district[map_district[std::tuple<Integer, Integer>((Integer)w_id, (Integer)d_id)]].d_next_o_id<<endl;
 
   int32_t all_local = 1;
   for(int32_t index=0; index<=items-1; index++) {
@@ -517,15 +481,12 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 	 update stock set s_quantity=s_quantity+91-qty[index] where s_w_id=supware[index] and s_i_id=itemid[index];
 	}" */
 	Numeric<4,0> s_quantity_currentValue = t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity;
-//    std::cout<<"old value of s_quantity = "<<s_quantity_currentValue<<" and qty[index]= "<<qty[index]<<endl;
+
     if(s_quantity > Numeric<4,0>(qty[index])) {
-//	  std::cout<<"Inside IF of updating stock table for s_quantity."<<endl;
       t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity = s_quantity_currentValue - Numeric<4,0>(qty[index]);
 	} else {
-//      std::cout<<"Inside ELSE of updating stock table for s_quantity."<<endl;
       t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity = s_quantity_currentValue + Numeric<4,0>(91) - Numeric<4,0>(qty[index]);
 	}
-//	std::cout<<"new value of s_quantity = "<<t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity<<endl;
 	
 	/* For "if (supware[index]<>w_id) {
 	 update stock set s_remote_cnt=s_remote_cnt+1 where s_w_id=w_id and s_i_id=itemid[index];
@@ -534,17 +495,12 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 	 update stock set s_order_cnt=s_order_cnt+1 where s_w_id=w_id and s_i_id=itemid[index];
 	}" */
     if(supware[index] != w_id) {
-//	  std::cout<<"Inside IF of updating stock table for remote_cnt."<<endl;
       Numeric<4,0> s_remote_cnt_currentValue = t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_remote_cnt;
-//      std::cout<<"old value of s_remote_cnt = "<<s_remote_cnt_currentValue<<endl;
       t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_remote_cnt = s_remote_cnt_currentValue + 1;
 	} else {
-//      std::cout<<"Inside ELSE of updating stock table for remote_cnt."<<endl;
       Numeric<4,0> s_order_cnt_currentValue = t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_order_cnt;
-//      std::cout<<"old value of s_order_cnt = "<<s_order_cnt_currentValue<<endl;
       t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_order_cnt = s_order_cnt_currentValue + 1;
 	}
-//	std::cout<<"new value of s_quantity = "<<t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_quantity<<endl;
 
     //For "var numeric(6,2) ol_amount=qty[index]*i_price*(1.0+w_tax+d_tax)*(1.0-c_discount);"
 	Numeric<6,2> ol_amount = Numeric<6,2>(qty[index] * i_price.value * (1.0+w_tax.value+d_tax.value) * (1.0-c_discount.value));
@@ -566,5 +522,4 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
   }
   
 return;
-
 }
