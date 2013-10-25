@@ -475,7 +475,86 @@ std::cout<<"c_discount = "<<c_discount<<"\n";
   no.no_w_id = Integer(w_id);
   t_neworder.push_back(no);
   map_neworder.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(no.no_w_id, no.no_d_id, no.no_o_id), t_neworder.size()-1));
-  
+
+  // For last big for loop.
+  for(int32_t index=0; index<=items-1; index++) {
+    // For "select i_price from item where i_id=itemid[index];"
+    Numeric<5,2> i_price = t_item[map_item[Integer(itemid[index])]].i_price;
+    
+	/* For "select s_quantity,s_remote_cnt,s_order_cnt,case d_id when 1 then s_dist_01 when 2 then s_dist_02 when 3 then s_dist_03 when 4 then s_dist_04 when 5 then s_dist_05 when 6 then s_dist_06 when 7 then s_dist_07 when 8 then s_dist_08 when 9 then s_dist_09 when 10 then s_dist_10 end as s_dist from stock where s_w_id=supware[index] and s_i_id=itemid[index];" */
+	struct stock stk;
+	stk = t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]];
+	Numeric<4,0> s_quantity = stk.s_quantity;
+	Numeric<4,0> s_remote_cnt = stk.s_remote_cnt;
+	Numeric<4,0> s_order_cnt = stk.s_order_cnt;
+	Char<24> s_dist;
+	switch(d_id) {
+	  case 1:
+	    s_dist = stk.s_dist_01;
+	  case 2:
+	    s_dist = stk.s_dist_02;
+	  case 3:
+	    s_dist = stk.s_dist_03;
+	  case 4:
+	    s_dist = stk.s_dist_04;
+	  case 5:
+	    s_dist = stk.s_dist_05;
+	  case 6:
+	    s_dist = stk.s_dist_06;
+	  case 7:
+	    s_dist = stk.s_dist_07;
+	  case 8:
+	    s_dist = stk.s_dist_08;
+	  case 9:
+	    s_dist = stk.s_dist_09;
+	  case 10:
+	    s_dist = stk.s_dist_10;
+	}
+
+	/* For "if (s_quantity>qty[index]) {
+	 update stock set s_quantity=s_quantity-qty[index] where s_w_id=supware[index] and s_i_id=itemid[index];
+	} else {
+	 update stock set s_quantity=s_quantity+91-qty[index] where s_w_id=supware[index] and s_i_id=itemid[index];
+	}" */
+	Numeric<4,0> s_quantity_currentValue = t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity;
+    std::cout<<"old value of s_quantity = "<<s_quantity_currentValue<<" and qty[index]= "<<qty[index]<<endl;
+    if(s_quantity > Numeric<4,0>(qty[index])) {
+	  std::cout<<"Inside IF of updating stock table for s_quantity."<<endl;
+      t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity = s_quantity_currentValue - Numeric<4,0>(qty[index]);
+	} else {
+      std::cout<<"Inside ELSE of updating stock table for s_quantity."<<endl;
+      t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity = s_quantity_currentValue + Numeric<4,0>(91) - Numeric<4,0>(qty[index]);
+	}
+	std::cout<<"new value of s_quantity = "<<t_stock[map_stock[std::tuple<Integer, Integer>(Integer(supware[index]), Integer(itemid[index]))]].s_quantity<<endl;
+	
+	/* For "if (supware[index]<>w_id) {
+	 update stock set s_remote_cnt=s_remote_cnt+1 where s_w_id=w_id and s_i_id=itemid[index];
+	} else {
+	 update stock set s_order_cnt=s_order_cnt+1 where s_w_id=w_id and s_i_id=itemid[index];
+	}" */
+    if(supware[index] != w_id) {
+	  std::cout<<"Inside IF of updating stock table for remote_cnt."<<endl;
+      Numeric<4,0> s_remote_cnt_currentValue = t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_remote_cnt;
+      std::cout<<"old value of s_remote_cnt = "<<s_remote_cnt_currentValue<<endl;
+      t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_remote_cnt = s_remote_cnt_currentValue + 1;
+	} else {
+      std::cout<<"Inside ELSE of updating stock table for remote_cnt."<<endl;
+      Numeric<4,0> s_order_cnt_currentValue = t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_order_cnt;
+      std::cout<<"old value of s_order_cnt = "<<s_order_cnt_currentValue<<endl;
+      t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_order_cnt = s_order_cnt_currentValue + 1;
+	}
+	std::cout<<"new value of s_quantity = "<<t_stock[map_stock[std::tuple<Integer, Integer>(Integer(w_id), Integer(itemid[index]))]].s_quantity<<endl;
+	
+  }
+
+/*  
+   forsequence (index between 0 and items-1) {
+
+      var numeric(6,2) ol_amount=qty[index]*i_price*(1.0+w_tax+d_tax)*(1.0-c_discount);
+      insert into orderline values (o_id,d_id,w_id,index+1,itemid[index],supware[index],0,qty[index],ol_amount,s_dist);
+   }  
+*/
+
 return;
 
 }
