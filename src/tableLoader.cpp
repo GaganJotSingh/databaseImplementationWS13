@@ -429,17 +429,17 @@ void newOrder(int32_t w_id, int32_t d_id, int32_t c_id, int32_t items, int32_t s
 std::cout<<"neworder function called...\n";
 
   // For "select w_tax from warehouse w where w.w_id=w_id;"
-  Numeric<4,4> w_tax_1 = t_warehouse[map_warehouse[(Integer)w_id]].w_tax;
-std::cout<<"w_tax_1 = "<<w_tax_1<<"\n";
+  Numeric<4,4> w_tax = t_warehouse[map_warehouse[(Integer)w_id]].w_tax;
+std::cout<<"w_tax = "<<w_tax<<"\n";
 
   // For "select c_discount from customer c where c_w_id=w_id and c_d_id=d_id and c.c_id=c_id;"  
-  Numeric<4,4> c_discount_1 = t_customer[map_customer[std::tuple<Integer, Integer, Integer>((Integer)w_id, (Integer)d_id, (Integer)c_id)]].c_discount;
-std::cout<<"c_discount_1 = "<<c_discount_1<<"\n";
+  Numeric<4,4> c_discount = t_customer[map_customer[std::tuple<Integer, Integer, Integer>((Integer)w_id, (Integer)d_id, (Integer)c_id)]].c_discount;
+std::cout<<"c_discount = "<<c_discount<<"\n";
 
   // For "select d_next_o_id as o_id,d_tax from district d where d_w_id=w_id and d.d_id=d_id;"
-  Integer d_next_o_id_1 = t_district[map_district[std::tuple<Integer, Integer>((Integer)w_id, (Integer)d_id)]].d_next_o_id;
-  Integer o_id = d_next_o_id_1;
-  Numeric<4,4> d_tax = (Numeric<4,4>)d_next_o_id_1;
+  Integer d_next_o_id = t_district[map_district[std::tuple<Integer, Integer>((Integer)w_id, (Integer)d_id)]].d_next_o_id;
+  Integer o_id = d_next_o_id;
+  Numeric<4,4> d_tax = (Numeric<4,4>)d_next_o_id;
   std::cout<<"o_id="<<o_id<<" and d_tax= "<<d_tax<<endl;
   
   // For "update district set d_next_o_id=o_id+1 where d_w_id=w_id and district.d_id=d_id;"
@@ -447,14 +447,35 @@ std::cout<<"c_discount_1 = "<<c_discount_1<<"\n";
   t_district[map_district[std::tuple<Integer, Integer>((Integer)w_id, (Integer)d_id)]].d_next_o_id = o_id + 1;
   std::cout<<"new value od d_next_o_id = "<<t_district[map_district[std::tuple<Integer, Integer>((Integer)w_id, (Integer)d_id)]].d_next_o_id<<endl;
 
-  int all_local = 1;
+  int32_t all_local = 1;
   for(int32_t index=0; index<=items-1; index++) {
     if(w_id!=supware[index]) {
       all_local=0;
 	}
   }
   
+  // For "insert into "order" values (o_id,d_id,w_id,c_id,datetime,0,items,all_local);"
+  struct order odr;
+  odr.o_id = o_id;
+  odr.o_d_id = Integer(d_id);
+  odr.o_w_id = Integer(w_id);
+  odr.o_c_id = Integer(c_id);
+  odr.o_entry_d = datetime;
+  odr.o_carrier_id = Integer(0);
+  odr.o_ol_cnt = Numeric<2,0>(Integer(items));
+  odr.o_all_local = Numeric<1,0>(Integer(all_local));
+  t_order.push_back(odr);
+  map_order.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id,odr.o_id), t_order.size()-1));
+  order_wdc.insert(std::pair<uint64_t, uint64_t>(hashKey<Integer, Integer, Integer, Integer>(odr.o_w_id, odr.o_d_id, odr.o_c_id, odr.o_id), t_order.size()-1));
+
+  // For "insert into neworder values (o_id,d_id,w_id);"
+  struct neworder no;
+  no.no_o_id = o_id;
+  no.no_d_id = Integer(d_id);
+  no.no_w_id = Integer(w_id);
+  t_neworder.push_back(no);
+  map_neworder.insert(std::pair<tuple<Integer, Integer, Integer>, uint64_t>(std::tuple<Integer, Integer, Integer>(no.no_w_id, no.no_d_id, no.no_o_id), t_neworder.size()-1));
+  
 return;
 
 }
-
