@@ -449,10 +449,11 @@ std::cout<<"c_discount_1 = "<<c_discount_1<<"\n";
 
   int all_local = 1;
   for(int32_t index=0; index<=items-1; index++) {
-    if(w_id==supware[index])
+    if(w_id!=supware[index]) {
       all_local=0;
-   }
-   
+	}
+  }
+  
 return;
 
 }
