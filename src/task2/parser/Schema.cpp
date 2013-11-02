@@ -9,6 +9,28 @@ static std::string type(const Schema::Relation::Attribute& attr) {
          return "Integer";
       case Types::Tag::Numeric: {
          std::stringstream ss;
+         ss << "Numeric<" << attr.len1 << "," << attr.len2 << ">";
+         return ss.str();
+      }
+      case Types::Tag::Char: {
+         std::stringstream ss;
+         ss << "Char<" << attr.len << ">";
+         return ss.str();
+      }
+      case Types::Tag::Varchar: {
+         std::stringstream ss;
+         ss << "Varchar<" << attr.len << ">";
+         return ss.str();
+      }
+      case Types::Tag::Timestamp:
+         return "Timestamp";
+   }
+   
+/*   switch(type) {
+      case Types::Tag::Integer:
+         return "Integer";
+      case Types::Tag::Numeric: {
+         std::stringstream ss;
          ss << "Numeric(" << attr.len1 << ", " << attr.len2 << ")";
          return ss.str();
       }
@@ -24,13 +46,20 @@ static std::string type(const Schema::Relation::Attribute& attr) {
       }
       case Types::Tag::Timestamp:
          return "Timestamp";
-   }
+   }*/
    throw;
 }
 
 std::string Schema::toString() const {
    std::stringstream out;
    for (const Schema::Relation& rel : relations) {
+      out << "struct " << rel.name << " {" << std::endl;
+      for (const auto& attr : rel.attributes)
+         out << '\t' << type(attr) << " " << attr.name << ";" << std::endl;
+      out << "};\n\n";
+   }
+   
+/*   for (const Schema::Relation& rel : relations) {
       out << rel.name << std::endl;
       out << "\tPrimary Key:";
       for (unsigned keyId : rel.primaryKey)
@@ -38,6 +67,7 @@ std::string Schema::toString() const {
       out << std::endl;
       for (const auto& attr : rel.attributes)
          out << '\t' << attr.name << '\t' << type(attr) << (attr.notNull ? " not null" : "") << std::endl;
-   }
+   }*/
+   
    return out.str();
 }
