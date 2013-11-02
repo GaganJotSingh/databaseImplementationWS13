@@ -10,7 +10,13 @@ struct Schema {
       struct Attribute {
          std::string name;
          Types::Tag type;
-         unsigned len;
+         union {
+            unsigned len;
+            struct {
+               unsigned len1;
+               unsigned len2;
+            };
+         };
          bool notNull;
          Attribute() : len(~0), notNull(true) {}
       };
