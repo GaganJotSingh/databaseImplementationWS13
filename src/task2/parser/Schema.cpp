@@ -7,11 +7,11 @@ static std::string type(const Schema::Relation::Attribute& attr) {
    switch(type) {
       case Types::Tag::Integer:
          return "Integer";
-      /*case Types::Tag::Numeric: {
+      case Types::Tag::Numeric: {
          std::stringstream ss;
          ss << "Numeric(" << attr.len1 << ", " << attr.len2 << ")";
          return ss.str();
-      }*/
+      }
       case Types::Tag::Char: {
          std::stringstream ss;
          ss << "Char(" << attr.len << ")";
@@ -22,6 +22,8 @@ static std::string type(const Schema::Relation::Attribute& attr) {
          ss << "Varchar(" << attr.len << ")";
          return ss.str();
       }
+      case Types::Tag::Timestamp:
+         return "Timestamp";
    }
    throw;
 }

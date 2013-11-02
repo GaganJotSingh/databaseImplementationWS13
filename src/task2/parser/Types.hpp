@@ -10,7 +10,7 @@
  * Types
  */
 namespace Types {
-   enum class Tag : unsigned {Integer, Char, Varchar};
+   enum class Tag : unsigned {Integer, Char, Varchar, Numeric, Timestamp};
 }
 
 
@@ -73,7 +73,7 @@ std::string Varchar<len>::toString() {
 /**
  * Numeric
  */
-/*template <unsigned len1, unsigned len2>
+template <unsigned len1, unsigned len2>
 struct Numeric {
    uint64_t data;
    Numeric(uint64_t pre, uint64_t decimal);
@@ -83,5 +83,10 @@ template <unsigned len1, unsigned len2>
 Numeric<len1,len2>::Numeric(uint64_t pre, uint64_t decimal) {
    data = decimal + std::pow(10, len2)*pre;
 }
-*/
+
+/**
+ * Timestamp
+ */
+typedef int Timestamp;
+
 #endif

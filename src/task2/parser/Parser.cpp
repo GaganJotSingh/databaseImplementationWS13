@@ -16,6 +16,7 @@ namespace keyword {
    const std::string Null = "null";
    const std::string Char = "char";
    const std::string Varchar = "varchar";
+   const std::string Timestamp = "timestamp";
 }
 
 namespace literal {
@@ -59,7 +60,9 @@ static bool isIdentifier(const std::string& str) {
       str==keyword::Numeric ||
       str==keyword::Not ||
       str==keyword::Null ||
-      str==keyword::Char
+      str==keyword::Char ||
+      str==keyword::Varchar ||
+      str==keyword::Timestamp
    )
       return false;
    return str.find_first_not_of("abcdefghijklmnopqrstuvwxyz_1234567890") == std::string::npos;
@@ -180,11 +183,14 @@ void Parser::nextToken(unsigned line, const std::string& token, Schema& schema) 
             schema.relations.back().attributes.back().type=Types::Tag::Char;
             state=State::AttributeTypeChar;
          } else if (tok==keyword::Numeric) {
-            //schema.relations.back().attributes.back().type=Types::Tag::Numeric;
+            schema.relations.back().attributes.back().type=Types::Tag::Numeric;
             state=State::AttributeTypeNumeric;
          } else if (tok==keyword::Varchar) {
             schema.relations.back().attributes.back().type=Types::Tag::Varchar;
             state=State::AttributeTypeVarchar;
+         } else if (tok==keyword::Timestamp) {
+            schema.relations.back().attributes.back().type=Types::Tag::Timestamp;
+            state=State::AttributeTypeTimestamp;
          }
          else throw ParserError(line, "Expected type after attribute name, found '"+token+"'");
          break;
@@ -236,7 +242,7 @@ void Parser::nextToken(unsigned line, const std::string& token, Schema& schema) 
          break;
       case State::NumericBegin:
          if (isInt(tok)) {
-            //schema.relations.back().attributes.back().len1=std::atoi(tok.c_str());
+            schema.relations.back().attributes.back().len1=std::atoi(tok.c_str());
             state=State::NumericValue1;
          } else {
             throw ParserError(line, "Expected integer after 'NUMERIC(', found'"+token+"'");
@@ -256,7 +262,7 @@ void Parser::nextToken(unsigned line, const std::string& token, Schema& schema) 
          break;
       case State::NumericSeparator:
          if (isInt(tok)) {
-            //schema.relations.back().attributes.back().len2=std::atoi(tok.c_str());
+            schema.relations.back().attributes.back().len2=std::atoi(tok.c_str());
             state=State::NumericValue2;
          } else {
             throw ParserError(line, "Expected second length for NUMERIC type, found'"+token+"'");
@@ -266,6 +272,15 @@ void Parser::nextToken(unsigned line, const std::string& token, Schema& schema) 
       case State::VarcharEnd: /* fallthrough */
       case State::NumericEnd: /* fallthrough */
       case State::AttributeTypeInt:
+         if (tok.size()==1 && tok[0]==literal::Comma)
+            state=State::Separator;
+         else if (tok==keyword::Not)
+            state=State::Not;
+         else if (tok.size()==1 && tok[0]==literal::ParenthesisRight)
+				state=State::CreateTableEnd;
+         else throw ParserError(line, "Expected ',' or 'NOT NULL' after attribute type, found '"+token+"'");
+         break;
+      case State::AttributeTypeTimestamp:
          if (tok.size()==1 && tok[0]==literal::Comma)
             state=State::Separator;
          else if (tok==keyword::Not)
