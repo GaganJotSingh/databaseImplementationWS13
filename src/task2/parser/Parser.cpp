@@ -65,7 +65,7 @@ static bool isIdentifier(const std::string& str) {
       str==keyword::Timestamp
    )
       return false;
-   return str.find_first_not_of("abcdefghijklmnopqrstuvwxyz_1234567890") == std::string::npos;
+   return str.find_first_not_of("abcdefghijklmnopqrstuvwxyz_\"1234567890") == std::string::npos;
 }
 
 static bool isInt(const std::string& str) {
