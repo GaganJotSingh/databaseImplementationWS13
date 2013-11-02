@@ -17,6 +17,11 @@ static std::string type(const Schema::Relation::Attribute& attr) {
          ss << "Char(" << attr.len << ")";
          return ss.str();
       }
+      case Types::Tag::Varchar: {
+         std::stringstream ss;
+         ss << "Varchar(" << attr.len << ")";
+         return ss.str();
+      }
    }
    throw;
 }

@@ -15,6 +15,7 @@ namespace keyword {
    const std::string Not = "not";
    const std::string Null = "null";
    const std::string Char = "char";
+   const std::string Varchar = "varchar";
 }
 
 namespace literal {
@@ -181,6 +182,9 @@ void Parser::nextToken(unsigned line, const std::string& token, Schema& schema) 
          } else if (tok==keyword::Numeric) {
             //schema.relations.back().attributes.back().type=Types::Tag::Numeric;
             state=State::AttributeTypeNumeric;
+         } else if (tok==keyword::Varchar) {
+            schema.relations.back().attributes.back().type=Types::Tag::Varchar;
+            state=State::AttributeTypeVarchar;
          }
          else throw ParserError(line, "Expected type after attribute name, found '"+token+"'");
          break;
@@ -203,6 +207,26 @@ void Parser::nextToken(unsigned line, const std::string& token, Schema& schema) 
             state=State::CharEnd;
          else
             throw ParserError(line, "Expected ')' after length of CHAR, found'"+token+"'");
+         break;
+      case State::AttributeTypeVarchar:
+         if (tok.size()==1 && tok[0]==literal::ParenthesisLeft)
+            state=State::VarcharBegin;
+         else
+            throw ParserError(line, "Expected '(' after 'VARCHAR', found'"+token+"'");
+         break;
+      case State::VarcharBegin:
+         if (isInt(tok)) {
+            schema.relations.back().attributes.back().len=std::atoi(tok.c_str());
+            state=State::VarcharValue;
+         } else {
+            throw ParserError(line, "Expected integer after 'VARCHAR(', found'"+token+"'");
+         }
+         break;
+      case State::VarcharValue:
+         if (tok.size()==1 && tok[0]==literal::ParenthesisRight)
+            state=State::VarcharEnd;
+         else
+            throw ParserError(line, "Expected ')' after length of VARCHAR, found'"+token+"'");
          break;
       case State::AttributeTypeNumeric:
          if (tok.size()==1 && tok[0]==literal::ParenthesisLeft)
@@ -239,6 +263,7 @@ void Parser::nextToken(unsigned line, const std::string& token, Schema& schema) 
          }
          break;
       case State::CharEnd: /* fallthrough */
+      case State::VarcharEnd: /* fallthrough */
       case State::NumericEnd: /* fallthrough */
       case State::AttributeTypeInt:
          if (tok.size()==1 && tok[0]==literal::Comma)

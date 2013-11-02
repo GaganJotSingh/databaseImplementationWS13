@@ -10,7 +10,7 @@
  * Types
  */
 namespace Types {
-   enum class Tag : unsigned {Integer, Char};
+   enum class Tag : unsigned {Integer, Char, Varchar};
 }
 
 
@@ -42,6 +42,31 @@ void Char<len>::loadString(const std::string& str) {
 
 template <unsigned len>
 std::string Char<len>::toString() {
+   return std::string(data, data+len);
+}
+
+/**
+ * Varchar
+ */
+template <unsigned len>
+struct Varchar {
+   char data[len];
+   void loadString(const std::string& str);
+   std::string toString();
+};
+
+template <unsigned len>
+void Varchar<len>::loadString(const std::string& str) {
+   if (str.size() >= len) {
+      memcpy(data, str.c_str(), len);
+   } else {
+      memset(data, ' ', len);
+      memcpy(data, str.c_str(), str.size());
+   }
+}
+
+template <unsigned len>
+std::string Varchar<len>::toString() {
    return std::string(data, data+len);
 }
 
