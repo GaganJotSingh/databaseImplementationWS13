@@ -1,6 +1,4 @@
-
-<!-- saved from url=(0069)http://www-db.in.tum.de/teaching/ws1314/imlab/delivery.script?lang=en -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><script type="text/javascript" src="chrome-extension://bfbmjmiodbnnpllbbbfblcplfjjepjdn/js/injected.js"></script><script type="text/javascript">function a() {	 document.addEventListener('keydown', function(e){		/*console.log('keydown');*/		var keys = [];		if(e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {			if(e.metaKey) {				keys.push('Cmd');			}			if(e.shiftKey) {				keys.push('Shift');			}			if(e.ctrlKey)			{				keys.push('Ctrl');			}			if(e.altKey) {				keys.push('Alt');			}		}		if(e.which)		{			/*console.log(e.which);*/			keys.push(String.fromCharCode(e.which));		}		/*console.log(keys.join('+'));*/		if(keys.length >= 2 && keys[keys.length-1] != '') {			window.postMessage({type: 'dolphin_shortcuts', keys:keys}, '*');		}	 });}a();</script><script type="text/javascript"> window.oncontextmenu = function(event) {    var target = event.target.getAttribute('obj_url');	 window.postMessage({type: 'dolphin_clickTarget', target:target}, '*'); };</script><style>[touch-action="none"]{ -ms-touch-action: none; touch-action: none; }[touch-action="pan-x"]{ -ms-touch-action: pan-x; touch-action: pan-x; }[touch-action="pan-y"]{ -ms-touch-action: pan-y; touch-action: pan-y; }[touch-action="scroll"],[touch-action="pan-x pan-y"],[touch-action="pan-y pan-x"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; }</style></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">create transaction delivery(integer w_id, integer o_carrier_id, timestamp datetime)
+create transaction delivery(integer w_id, integer o_carrier_id, timestamp datetime)
 {
    forsequence (d_id between 1 and 10) {
       select min(no_o_id) as o_id from neworder where no_w_id=w_id and no_d_id=d_id order by no_o_id else { continue; } -- ignore this district if no row found
@@ -21,5 +19,3 @@
 
    commit;
 };
-
-</pre><div id="GOOGLE_INPUT_CHEXT_FLAG" style="display: none;" input="" input_stat="{}"></div></body></html>
