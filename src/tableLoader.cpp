@@ -527,27 +527,26 @@ return;
 void delivery(int32_t w_id, int32_t o_carrier_id, Timestamp datetime) {
    for (int32_t d_id=1; d_id<=10; d_id++) {
       Integer o_id;
-      priority_queue<Integer, vector<Integer>, less<vector<Integer>::value_type>> m_o_id;
-      for(int32_t x=0; x < (int32_t)t_neworder.size(); x++) {
-	     if(t_neworder[x].no_w_id == w_id && t_neworder[x].no_d_id == d_id) {
-	        m_o_id.push(t_neworder[x].no_o_id);
+      priority_queue<Integer, vector<Integer>, less<vector<Integer>::value_type>> pq_o_id;
+      for(uint32_t counter=0; counter < t_neworder.size(); counter++) {
+	     if(t_neworder[counter].no_w_id == w_id && t_neworder[counter].no_d_id == d_id) {
+	        pq_o_id.push(t_neworder[counter].no_o_id);
 		 }
       }
-      if(!m_o_id.size()) {
+      if(!pq_o_id.size()) {
          continue;
       }
 
-      while(!m_o_id.empty()) {
-         o_id = m_o_id.top();
-         m_o_id.pop();
+      while(!pq_o_id.empty()) {
+         o_id = pq_o_id.top();
+         pq_o_id.pop();
       }
 	  
-// delete from neworder where no_w_id=w_id and no_d_id=d_id and no_o_id=o_id;
-      t_neworder.erase(t_neworder.begin()+ map_neworder[std::make_tuple((Integer)w_id,(Integer)d_id,(Integer)o_id)]);
+      t_neworder.erase(t_neworder.begin()+ map_neworder[std::make_tuple((Integer)w_id, (Integer)d_id, o_id)]);
 
-      std::map<tuple<Integer,Integer,Integer>,uint64_t>::iterator it, it2;
-      it2 = it = map_neworder.find(std::make_tuple((Integer)w_id,(Integer)d_id,(Integer)o_id));
-      for (std::map<tuple<Integer, Integer, Integer >, uint64_t>::iterator it1 = ++it; it1 != map_neworder.end(); it1++) {
+      std::map<tuple<Integer,Integer,Integer>,uint64_t>::iterator it1, it2;
+      it2 = it1 = map_neworder.find(std::make_tuple((Integer)w_id, (Integer)d_id, o_id));
+      for (std::map<tuple<Integer, Integer, Integer>, uint64_t>::iterator it1 = ++it1; it1 != map_neworder.end(); it1++) {
          it1->second -= 1;
       }
       map_neworder.erase(it2);
@@ -555,31 +554,26 @@ void delivery(int32_t w_id, int32_t o_carrier_id, Timestamp datetime) {
       Numeric<2,0> o_ol_cnt;
       Integer o_c_id;
       struct order s;
-      s = t_order[map_order[std::make_tuple((Integer)w_id, (Integer)d_id, (Integer)o_id)]];
+      s = t_order[map_order[std::make_tuple((Integer)w_id, (Integer)d_id, o_id)]];
       o_ol_cnt = s.o_ol_cnt;
       o_c_id = s.o_c_id;
 
-//update "order" set o_carrier_id=o_carrier_id where o_w_id=w_id and o_d_id=d_id and "order".o_id=o_id;
       s.o_carrier_id = o_carrier_id;
 
       Numeric<6,2> ol_total(0);
-//Numeric<2,0> ol_number(1);
       Numeric<6,2> ol_amout;
       struct orderline s1;
       for (Numeric<2,0> ol_number(1); ol_number <= o_ol_cnt; ol_number+=1) {
-         s1 = t_orderline[map_orderline[std::make_tuple((Integer)w_id,(Integer)d_id, (Integer)o_id, (Integer)ol_number.value)]];
+         s1 = t_orderline[map_orderline[std::make_tuple((Integer)w_id,(Integer)d_id, o_id, (Integer)ol_number.value)]];
          ol_amout = s1.ol_amount;
          ol_total += ol_amout;
-         s1.ol_delivery_d = datetime;//(Timestamp)time(NULL);
+         s1.ol_delivery_d = datetime;
       }
 
-//update customer set c_balance=c_balance+ol_total where c_w_id=w_id and c_d_id=d_id and c_id=o_c_id;
       struct customer s2;
-
       s2 = t_customer[map_customer[std::make_tuple((Integer)w_id, (Integer)d_id, (Integer)o_c_id)]];
       s2.c_balance += (Numeric<12,2>)ol_total.value;  
    }
    
 return;
 }
-
