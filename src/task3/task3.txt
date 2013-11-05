@@ -3,7 +3,9 @@ Task 3
 1. Implement the following SQL query as a C++ program using STL data structures for the join implementation. Do not use any existing index structures (primary key indexes):
  select sum(ol_quantity*ol_amount)
  from customer, "order", orderline
- where o_c_id = c_id
+ where o_w_id = c_w_id
+ and o_d_id = c_d_id
+ and o_c_id = c_id
  and o_w_id = ol_w_id
  and o_d_id = ol_d_id
  and o_id = ol_o_id
