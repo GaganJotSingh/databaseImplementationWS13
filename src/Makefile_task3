@@ -1,9 +1,9 @@
 CC = g++
 CFLAGS = -std=c++0x -g -O3 -Wall -c
 LDFLAGS = 
-SOURCES = neworderrandom.cpp
+SOURCES = task3Query.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE = neworderrandom
+EXECUTABLE = task3Query
 
 all: $(SOURCES) $(EXECUTABLE)
 	
