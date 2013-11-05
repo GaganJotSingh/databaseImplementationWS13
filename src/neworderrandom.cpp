@@ -11,9 +11,12 @@ using namespace std;
 
 const int32_t warehouses=5;
 
-int32_t random() {
+// random() function for windows: Uncomment when running in windows
+/*
+ * int32_t random() {
   return (int32_t)rand();
 }
+*/
 
 int32_t urand(int32_t min,int32_t max) {
    return (random()%(max-min+1))+min;
@@ -60,7 +63,7 @@ int main() {
   std::cout<<"start = "<<start<<endl;
 
   // Running neworderrandom() 1 million times.
-  for(uint64_t counter=0; counter<300000; counter++) {
+  for(uint64_t counter=0; counter<100000; counter++) {
     now.value = time(NULL);
 	w_id = random();
     newOrderRandom(now, w_id);
