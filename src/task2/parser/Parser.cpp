@@ -96,7 +96,14 @@ void Parser::nextToken(unsigned line, const std::string& token, Schema& schema) 
       case State::Table:
          if (isIdentifier(tok)) {
             state=State::TableName;
-            schema.relations.push_back(Schema::Relation(token));
+            if(tok.find("\"") == 0) {                 // For handling tableNames with quotes in SQL
+               std::string tokModified = tok;
+               tokModified.erase(tokModified.begin());
+               tokModified.erase(tokModified.end()-1);
+               schema.relations.push_back(Schema::Relation(tokModified));
+            } else {
+               schema.relations.push_back(Schema::Relation(token));
+            }
          } else {
             throw ParserError(line, "Expected TableName, found '"+token+"'");
          }
