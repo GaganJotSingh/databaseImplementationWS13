@@ -1,6 +1,9 @@
 CC = g++
-CFLAGS = -std=c++0x -g -O3 -Wall -c
-LDFLAGS = 
+# Below line only For Windows
+CFLAGS = -std=c++0x -g -O3 -Wall -fpermissive -c
+# CFLAGS = -std=c++0x -g -O3 -Wall -c
+LDFLAGS =
+WINDOWS = -fpermissive
 SOURCES = task3_fork.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = task3_fork

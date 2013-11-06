@@ -1,6 +1,8 @@
 CC = g++
-CFLAGS = -std=c++0x -g -O3 -Wall -c
-LDFLAGS = 
+# Below line only For Windows
+CFLAGS = -std=c++0x -g -O3 -Wall -fpermissive -c
+# CFLAGS = -std=c++0x -g -O3 -Wall -c
+LDFLAGS =
 SOURCES = task3_joinQuery.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = task3_joinQuery
