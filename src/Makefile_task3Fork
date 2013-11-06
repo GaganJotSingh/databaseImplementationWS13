@@ -1,0 +1,14 @@
+CC = g++
+CFLAGS = -std=c++0x -g -O3 -Wall -c
+LDFLAGS = 
+SOURCES = task3_fork.cpp
+OBJECTS = $(SOURCES:.cpp=.o)
+EXECUTABLE = task3_fork
+
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
