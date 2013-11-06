@@ -1,9 +1,9 @@
 CC = g++
 CFLAGS = -std=c++0x -g -O3 -Wall -c
 LDFLAGS = 
-SOURCES = task3Query.cpp
+SOURCES = task3_joinQuery.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE = task3Query
+EXECUTABLE = task3_joinQuery
 
 all: $(SOURCES) $(EXECUTABLE)
 	
