@@ -1,5 +1,7 @@
 CC = g++
-CFLAGS = -std=c++0x -g -O3 -Wall -c
+# Below line only For Windows
+CFLAGS = -std=c++0x -g -O3 -Wall -fpermissive -c
+# CFLAGS = -std=c++0x -g -O3 -Wall -c
 LDFLAGS = 
 SOURCES = neworderrandom.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
