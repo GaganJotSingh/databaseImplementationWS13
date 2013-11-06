@@ -73,12 +73,12 @@ Numeric<6,2> joinQuery() {
 	  }
   }
 
-  Numeric<6,2> sum = 0;
+  Numeric<6,2> sum(0);
   struct orderline ol;
   for(uint64_t x3 = 0; x3 < t_orderline.size(); x3++) {
       ol = t_orderline[x3];
       if(uMapOrder.count(std::tuple<Integer, Integer, Integer>(ol.ol_w_id, ol.ol_d_id, ol.ol_o_id)) == 1) {
-	      sum = sum + (ol.ol_quantity.value * ol.ol_amount.value);
+	      sum.value = sum.value + (ol.ol_quantity.value * ol.ol_amount.value);
 	  }
   }
   
@@ -103,21 +103,23 @@ int main() {
    sa.sa_handler=SIGCHLD_handler;
    sigaction(SIGCHLD,&sa,NULL);
    
-   childRunning = true;
-   pid_t pid = fork();
-   
-   if (pid) {                // parent
-     while (childRunning);   // wait for child
-	 Timestamp now;
-     now.value = time(NULL);
-     newOrderRandom(now);
-   } else if(pid == 0){                  // forked child
-     cout << "Result of query is: Sum = " << joinQuery() << endl;
-	 return 0;               // child is finished
-   } else {                  // pid < 0; failed to fork
-     cerr << "Failed to fork" << endl;
-     exit(1);
+   for(uint64_t counter=0; counter < 1000000; counter++) {
+      childRunning=true;
+      pid_t pid=fork();
+	   if (pid) {                // parent
+		 while (childRunning);   // wait for child
+		 Timestamp now;
+		 now.value = time(NULL);
+		 newOrderRandom(now);
+	   } else if(pid == 0){                  // forked child
+		 cout << "Result of query is: Sum = " << joinQuery() << endl;
+		 return 0;               // child is finished
+	   } else {                  // pid < 0; failed to fork
+		 cerr << "Failed to fork" << endl;
+		 exit(1);
+	   }
    }
+
    
    return 0;
 }

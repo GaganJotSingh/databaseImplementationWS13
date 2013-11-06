@@ -31,12 +31,12 @@ Numeric<6,2> joinQuery() {
 	  }
   }
 
-  Numeric<6,2> sum = 0;
+  Numeric<6,2> sum(0);
   struct orderline ol;
   for(uint64_t x3 = 0; x3 < t_orderline.size(); x3++) {
       ol = t_orderline[x3];
       if(uMapOrder.count(std::tuple<Integer, Integer, Integer>(ol.ol_w_id, ol.ol_d_id, ol.ol_o_id)) == 1) {
-	      sum = sum + (ol.ol_quantity.value * ol.ol_amount.value);
+	      sum.value = sum.value + (ol.ol_quantity.value * ol.ol_amount.value);
 	  }
   }
   
